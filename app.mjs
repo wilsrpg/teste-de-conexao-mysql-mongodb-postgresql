@@ -14,7 +14,7 @@ servidor.use(express.json());
 servidor.use(express.urlencoded({extended: false}));
 //servidor.use(express.static('.'));
 
-servidor.get('/teste', async (req, res)=>{
+servidor.get('/', async (req, res)=>{
   //resp.sendFile('index.html', {root: '.'});
   //fetch("https://wilsrpg.cyclic.cloud", {
   //  "headers": {
