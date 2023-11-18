@@ -1,5 +1,5 @@
 import express from 'express'
-import cors from 'cors'
+//import cors from 'cors'
 import mysql from 'mysql2'
 //import { config as dotenvConfig } from 'dotenv';
 import { MongoClient, ServerApiVersion } from 'mongodb'
@@ -8,36 +8,36 @@ import { MongoClient, ServerApiVersion } from 'mongodb'
 
 const servidor = express();
 servidor.use(express.json());
-servidor.use(cors({
+//servidor.use(cors({
 	//origin: 'http://meudominio.com'
-}));
+//}));
 servidor.use(express.urlencoded({extended: false}));
 //servidor.use(express.static('.'));
 
-servidor.get('/teste', async (req, resp)=>{
+servidor.get('/teste', async (req, res)=>{
   //resp.sendFile('index.html', {root: '.'});
-  fetch("https://wilsrpg.cyclic.cloud", {
-    "headers": {
-      "Authorization": `Basic ${btoa('wilsrpg@cyclic:BoraCyclic')}`,
-    },
-    "method": "GET"
-  }
-  )
-  .then(resp=>{
-    console.log(resp);
-    return resp.json({teste: 'ok'});
-  })
-  .catch(erro=>{
-    console.log(erro);
-    return erro.json({teste: 'erro'});
-  });
+  //fetch("https://wilsrpg.cyclic.cloud", {
+  //  "headers": {
+  //    "Authorization": `Basic ${btoa('wilsrpg@cyclic:BoraCyclic')}`,
+  //  },
+  //  "method": "GET"
+  //}
+  //)
+  //.then(resp=>{
+  //  console.log(resp);
+    return res.json({teste: 'ok'});
+  //})
+  //.catch(erro=>{
+  //  console.log(erro);
+  //  return res.json({teste: 'erro'});
+  //});
 });
 
 //servidor.get('/googlec36f80c6f63a5f05.html', async (req, resp)=>{
 //  resp.sendFile('googlec36f80c6f63a5f05.html', {root: '.'});
 //});
 
-servidor.post('/mysql', async (req, resp) => {
+servidor.post('/mysql', async (req, res) => {
   const con = mysql.createConnection({
     host: req.body.servidor.slice(0,req.body.servidor.search(':')),
     port: req.body.servidor.slice(req.body.servidor.search(':')),
@@ -55,7 +55,7 @@ servidor.post('/mysql', async (req, resp) => {
   console.log(desconectado);
   if(desconectado)
     //return resp.sendFile('erro.html', {root: '.'});
-    return resp.json({mysql: 'erro'});
+    return res.json({mysql: 'erro'});
   
   //con.connect(async (erro) => {
   //  if (erro)
@@ -68,10 +68,10 @@ servidor.post('/mysql', async (req, resp) => {
   //console.log(usuario);
 
   //resp.sendFile('sucesso.html', {root: '.'});
-  return resp.json({mysql: 'ok'});
+  return res.json({mysql: 'ok'});
 });
 
-servidor.post('/mongodb', async (req, resp) => {
+servidor.post('/mongodb', async (req, res) => {
   const uri = 'mongodb+srv://'+req.body.usuario+':'+req.body.senha+'@'+req.body.servidor+'/?retryWrites=true&w=majority';
   const client = new MongoClient(uri, {
     serverApi: {
@@ -90,18 +90,18 @@ servidor.post('/mongodb', async (req, resp) => {
   } catch(erro) {
     console.log('Erro na conexão com o banco de dados: '+erro);
     //return resp.sendFile('erro.html', {root: '.'});
-    return resp.json({mongodb: 'erro'});
+    return res.json({mongodb: 'erro'});
   } finally {
     // Ensures that the client will close when you finish/error
     await client.close();
   }
 
   //resp.sendFile('sucesso.html', {root: '.'});
-  return resp.json({mongodb: 'ok'});
+  return res.json({mongodb: 'ok'});
 });
 
-servidor.get('/usuarios', async (req, resp)=>{
-  resp.json({usuarios: [{nome: 'Nome1'},{nome: 'Nome2'},{nome: 'Nome3'}]});
+servidor.get('/usuarios', async (req, res)=>{
+  res.json({usuarios: [{nome: 'Nome1'},{nome: 'Nome2'},{nome: 'Nome3'}]});
 });
 
 servidor.listen(3333, ()=>console.log('iniciou server, ouvindo porta 3333'));
