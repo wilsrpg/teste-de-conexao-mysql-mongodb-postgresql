@@ -15,7 +15,7 @@ servidor.use(express.urlencoded({extended: false}));
 //servidor.use(express.static('.'));
 
 servidor.get('/', async (req, res)=>{
-  //resp.sendFile('index.html', {root: '.'});
+  res.sendFile('index.html', {root: '.'});
   //fetch("https://wilsrpg.cyclic.cloud", {
   //  "headers": {
   //    "Authorization": `Basic ${btoa('wilsrpg@cyclic:BoraCyclic')}`,
@@ -25,7 +25,7 @@ servidor.get('/', async (req, res)=>{
   //)
   //.then(resp=>{
   //  console.log(resp);
-    return res.json({teste: 'ok'});
+    //return res.json({teste: 'ok'});
   //})
   //.catch(erro=>{
   //  console.log(erro);
@@ -33,9 +33,17 @@ servidor.get('/', async (req, res)=>{
   //});
 });
 
-//servidor.get('/googlec36f80c6f63a5f05.html', async (req, resp)=>{
-//  resp.sendFile('googlec36f80c6f63a5f05.html', {root: '.'});
-//});
+servidor.get('/sucesso', async (req, res)=>{
+  res.sendFile('sucesso.html', {root: '.'});
+});
+
+servidor.get('/erro', async (req, res)=>{
+  res.sendFile('erro.html', {root: '.'});
+});
+
+servidor.get('/googlec36f80c6f63a5f05.html', async (req, res)=>{
+  res.sendFile('googlec36f80c6f63a5f05.html', {root: '.'});
+});
 
 servidor.post('/mysql', async (req, res) => {
   const con = mysql.createConnection({
