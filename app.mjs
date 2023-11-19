@@ -62,9 +62,9 @@ servidor.post('/mysql', async (req, res) => {
   });
   console.log(desconectado);
   if(desconectado)
-    //return resp.sendFile('erro.html', {root: '.'});
-    return res.json({mysql: 'erro'});
-  
+    res.sendFile('erro.html', {root: '.'});
+    //return res.json({mysql: 'erro'});
+  else
   //con.connect(async (erro) => {
   //  if (erro)
   //    throw erro;
@@ -75,8 +75,8 @@ servidor.post('/mysql', async (req, res) => {
   //});
   //console.log(usuario);
 
-  //resp.sendFile('sucesso.html', {root: '.'});
-  return res.json({mysql: 'ok'});
+  res.sendFile('sucesso.html', {root: '.'});
+  //return res.json({mysql: 'ok'});
 });
 
 servidor.post('/mongodb', async (req, res) => {
@@ -97,15 +97,15 @@ servidor.post('/mongodb', async (req, res) => {
     //console.log("Pinged your deployment. You successfully connected to MongoDB!");
     // Ensures that the client will close when you finish/error
     await client.close();
-    return res.json({mongodb: 'ok'});
+    res.sendFile('sucesso.html', {root: '.'});
+    //return res.json({mongodb: 'ok'});
   } catch(erro) {
     console.log('Erro na conexão com o database: '+erro);
     // Ensures that the client will close when you finish/error
     await client.close();
-    //return resp.sendFile('erro.html', {root: '.'});
-    return res.json({mongodb: 'erro'});
+    res.sendFile('erro.html', {root: '.'});
+    //return res.json({mongodb: 'erro'});
   }
-  //resp.sendFile('sucesso.html', {root: '.'});
 });
 
 servidor.get('/usuarios', async (req, res)=>{
