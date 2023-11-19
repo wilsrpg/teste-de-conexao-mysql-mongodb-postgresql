@@ -33,10 +33,6 @@ servidor.get('/', async (req, res)=>{
   //});
 });
 
-servidor.get('/favicon.ico', async (req, res)=>{
-  res.sendFile('favicon.ico', {root: '.'});
-});
-
 servidor.get('/favicon.svg', async (req, res)=>{
   res.sendFile('favicon.svg', {root: '.'});
 });
