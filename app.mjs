@@ -33,6 +33,14 @@ servidor.get('/', async (req, res)=>{
   //});
 });
 
+servidor.get('/favicon.ico', async (req, res)=>{
+  res.sendFile('favicon.ico', {root: '.'});
+});
+
+servidor.get('/favicon.svg', async (req, res)=>{
+  res.sendFile('favicon.svg', {root: '.'});
+});
+
 servidor.get('/sucesso', async (req, res)=>{
   res.sendFile('sucesso.html', {root: '.'});
 });
@@ -94,7 +102,7 @@ servidor.post('/mongodb', async (req, res) => {
     await client.connect();
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
-    //console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    console.log("Pinged your deployment. You successfully connected to MongoDB!");
     // Ensures that the client will close when you finish/error
     await client.close();
     res.sendFile('sucesso.html', {root: '.'});
