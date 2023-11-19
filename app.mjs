@@ -16,7 +16,7 @@ servidor.use(express.urlencoded({extended: false}));
 
 servidor.get('/', async (req, res)=>{
   res.sendFile('index.html', {root: '.'});
-  //fetch("https://wilsrpg.cyclic.cloud", {
+  //fetch("https://wilsrpg.cyclic.app", {
   //  "headers": {
   //    "Authorization": `Basic ${btoa('wilsrpg@cyclic:BoraCyclic')}`,
   //  },
@@ -49,7 +49,7 @@ servidor.post('/mysql', async (req, res) => {
   const con = mysql.createConnection({
     host: req.body.servidor.slice(0,req.body.servidor.search(':')),
     port: req.body.servidor.slice(req.body.servidor.search(':')),
-    database: req.body.banco,
+    database: req.body.database,
     user: req.body.usuario,
     password: req.body.senha
   });
@@ -94,18 +94,18 @@ servidor.post('/mongodb', async (req, res) => {
     await client.connect();
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } catch(erro) {
-    console.log('Erro na conexão com o banco de dados: '+erro);
-    //return resp.sendFile('erro.html', {root: '.'});
-    return res.json({mongodb: 'erro'});
-  } finally {
+    //console.log("Pinged your deployment. You successfully connected to MongoDB!");
     // Ensures that the client will close when you finish/error
     await client.close();
+    return res.json({mongodb: 'ok'});
+  } catch(erro) {
+    console.log('Erro na conexão com o database: '+erro);
+    // Ensures that the client will close when you finish/error
+    await client.close();
+    //return resp.sendFile('erro.html', {root: '.'});
+    return res.json({mongodb: 'erro'});
   }
-
   //resp.sendFile('sucesso.html', {root: '.'});
-  return res.json({mongodb: 'ok'});
 });
 
 servidor.get('/usuarios', async (req, res)=>{
