@@ -45,30 +45,32 @@ servidor.get('/erro', async (req, res)=>{
   res.sendFile('erro.html', {root: '.'});
 });
 
-servidor.get('/googlec36f80c6f63a5f05.html', async (req, res)=>{
-  res.sendFile('googlec36f80c6f63a5f05.html', {root: '.'});
-});
-
 servidor.post('/mysql', async (req, res) => {
+  let porta = '';
+  if (req.body.servidor.search(':') > 0) {
+    porta = req.body.servidor.slice(req.body.servidor.search(':')+1);
+    req.body.servidor = req.body.servidor.slice(0,req.body.servidor.search(':'));
+  }
   const con = mysql.createConnection({
-    host: req.body.servidor.slice(0,req.body.servidor.search(':')),
-    port: req.body.servidor.slice(req.body.servidor.search(':')),
+    host: req.body.servidor,
+    port: porta,
     database: req.body.database,
     user: req.body.usuario,
     password: req.body.senha
   });
-  //console.log(con.config.host+':'+con.config.port);
-  //console.log(con.config.database);
-  //console.log(con.config.user);
+  console.log(
+    'Tentando conexão com banco de dados MySQL:\n'
+    +'host='+con.config.host+':'+con.config.port+'\ndb='+con.config.database+'\nuser='+con.config.user
+  );
 
   const desconectado = await new Promise(resolve=>{
     con.ping(erro=>resolve(erro));
   });
-  console.log(desconectado);
-  if(desconectado)
+  if(desconectado) {
+    console.log('Conexão mal sucedida. Erro:\n'+desconectado);
     res.sendFile('erro.html', {root: '.'});
     //return res.json({mysql: 'erro'});
-  else
+  } else {
   //con.connect(async (erro) => {
   //  if (erro)
   //    throw erro;
@@ -79,34 +81,42 @@ servidor.post('/mysql', async (req, res) => {
   //});
   //console.log(usuario);
 
-  res.sendFile('sucesso.html', {root: '.'});
-  //return res.json({mysql: 'ok'});
+    console.log('Conexão bem sucedida.');
+    res.sendFile('sucesso.html', {root: '.'});
+    //return res.json({mysql: 'ok'});
+  }
 });
 
 servidor.post('/mongodb', async (req, res) => {
-  const uri = 'mongodb+srv://'+req.body.usuario+':'+req.body.senha+'@'+req.body.servidor+'/?retryWrites=true&w=majority';
-  const client = new MongoClient(uri, {
+  const uri = 'mongodb+srv://'+req.body.usuario+':'+req.body.senha+'@'+req.body.servidor
+    +'/?retryWrites=true&w=majority';
+  const cliente = new MongoClient(uri, {
     serverApi: {
       version: ServerApiVersion.v1,
       strict: true,
       deprecationErrors: true,
     }
   });
+  console.log(
+    'Tentando conexão com banco de dados MongoDB:\n'
+    +'host='+cliente.options.srvHost+'\ndb='+cliente.options.dbName+'\nuser='+cliente.options.credentials.username
+  );
 
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    await cliente.connect();
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    await cliente.db("admin").command({ ping: 1 });
+    //console.log("Pinged your deployment. You successfully connected to MongoDB!");
     // Ensures that the client will close when you finish/error
-    await client.close();
+    await cliente.close();
+    console.log('Conexão bem sucedida.');
     res.sendFile('sucesso.html', {root: '.'});
     //return res.json({mongodb: 'ok'});
   } catch(erro) {
-    console.log('Erro na conexão com o database: '+erro);
+    console.log('Conexão mal sucedida. Erro:\n'+erro);
     // Ensures that the client will close when you finish/error
-    await client.close();
+    await cliente.close();
     res.sendFile('erro.html', {root: '.'});
     //return res.json({mongodb: 'erro'});
   }
