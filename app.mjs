@@ -19,21 +19,6 @@ servidor.use(express.urlencoded({extended: false}));
 
 servidor.get('/', async (req, res)=>{
   res.sendFile('index.html', {root: '.'});
-  //fetch("https://wilsrpg.cyclic.app", {
-  //  "headers": {
-  //    "Authorization": `Basic ${btoa('wilsrpg@cyclic:BoraCyclic')}`,
-  //  },
-  //  "method": "GET"
-  //}
-  //)
-  //.then(resp=>{
-  //  console.log(resp);
-    //return res.json({teste: 'ok'});
-  //})
-  //.catch(erro=>{
-  //  console.log(erro);
-  //  return res.json({teste: 'erro'});
-  //});
 });
 
 servidor.get('/favicon.svg', async (req, res)=>{
@@ -65,28 +50,15 @@ servidor.post('/mysql', async (req, res) => {
     'Tentando conexão com banco de dados MySQL:\n'
     +'host='+con.config.host+':'+con.config.port+'\ndb='+con.config.database+'\nuser='+con.config.user
   );
-
   const desconectado = await new Promise(resolve=>{
     con.ping(erro=>resolve(erro));
   });
   if(desconectado) {
     console.log('Conexão mal sucedida. Erro:\n'+desconectado);
     res.sendFile('erro.html', {root: '.'});
-    //return res.json({mysql: 'erro'});
   } else {
-  //con.connect(async (erro) => {
-  //  if (erro)
-  //    throw erro;
-  //  con.query('SELECT * FROM `teste`;', (e,resultado,campos)=>{
-  //    //console.log(resultado);
-  //    return resolve(resultado[0].usuario);
-  //  });
-  //});
-  //console.log(usuario);
-
     console.log('Conexão bem sucedida.');
     res.sendFile('sucesso.html', {root: '.'});
-    //return res.json({mysql: 'ok'});
   }
 });
 
@@ -104,24 +76,16 @@ servidor.post('/mongodb', async (req, res) => {
     'Tentando conexão com banco de dados MongoDB:\n'
     +'host='+cliente.options.srvHost+'\ndb='+cliente.options.dbName+'\nuser='+cliente.options.credentials.username
   );
-
   try {
-    // Connect the client to the server	(optional starting in v4.7)
     await cliente.connect();
-    // Send a ping to confirm a successful connection
     await cliente.db("admin").command({ ping: 1 });
-    //console.log("Pinged your deployment. You successfully connected to MongoDB!");
-    // Ensures that the client will close when you finish/error
     await cliente.close();
     console.log('Conexão bem sucedida.');
     res.sendFile('sucesso.html', {root: '.'});
-    //return res.json({mongodb: 'ok'});
-  } catch(erro) {
+  } catch (erro) {
     console.log('Conexão mal sucedida. Erro:\n'+erro);
-    // Ensures that the client will close when you finish/error
     await cliente.close();
     res.sendFile('erro.html', {root: '.'});
-    //return res.json({mongodb: 'erro'});
   }
 });
 
