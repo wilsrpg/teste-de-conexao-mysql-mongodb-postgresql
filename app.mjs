@@ -3,6 +3,9 @@ import express from 'express'
 import mysql from 'mysql2'
 //import { config as dotenvConfig } from 'dotenv';
 import { MongoClient, ServerApiVersion } from 'mongodb'
+//import { Client as PGClient } from 'pg'
+//const { Client: PGClient } = require('pg');
+import Client from 'pg/lib/client.js'
 
 //dotenvConfig();
 
@@ -120,6 +123,35 @@ servidor.post('/mongodb', async (req, res) => {
     res.sendFile('erro.html', {root: '.'});
     //return res.json({mongodb: 'erro'});
   }
+});
+
+servidor.post('/postgresql', async (req, res) => {
+  let porta = '';
+  if (req.body.servidor.search(':') > 0) {
+    porta = req.body.servidor.slice(req.body.servidor.search(':')+1);
+    req.body.servidor = req.body.servidor.slice(0,req.body.servidor.search(':'));
+  }
+  const cliente = new Client({
+    host: req.body.servidor,
+    port: porta,
+    database: req.body.database,
+    user: req.body.usuario,
+    password: req.body.senha,
+    ssl: true
+  });
+  console.log(
+    'Tentando conexão com banco de dados PostgreSQL:\n'
+    +'host='+cliente.host+':'+cliente.port+'\ndb='+cliente.database+'\nuser='+cliente.user
+  );
+  cliente.connect(function(erro) {
+    if (erro) {
+      console.log('Conexão mal sucedida. Erro:\n'+erro);
+      res.sendFile('erro.html', {root: '.'});
+    } else {
+      console.log('Conexão bem sucedida.');
+      res.sendFile('sucesso.html', {root: '.'});
+    }
+  });
 });
 
 servidor.get('/usuarios', async (req, res)=>{
