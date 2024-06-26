@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "node app.mjs",
     "start": "node app.mjs"
   },
   "author": "",
